@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html
+    lang="en"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/layouts/main_layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 조회</title>
+</head>
+<body>
+    <th:block layout:fragment="content">
+        <h1>게시글 조회</h1>
+        <form th:action="@{/posts/create}" method="post" th:object="${post}" enctype="multipart/form-data">
+            <table class="table table-hover table-bordered bg-white shadow-sm align-middle">
+                <tr>
+                    <td>제목</td>
+                    <td>
+                        <input type="text" th:field="*{title}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>작성자</td>
+                    <td>
+                        <input type="text" th:field="*{writer}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>내용</td>
+                    <td>
+                        <textarea th:field="*{content}" rows="5" cols="40" readonly></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="right">
+                        <button type="button" onclick="location.href='/posts/list'">목록</button>
+                        <button type="button" th:onclick="location.href='/posts/update/' + [[${post.no}]]">수정</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </th:block>
+</body>
+</html>

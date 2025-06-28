@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-PostApplication<post>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.aloha.post.PostApplication",
+            "projectName": "post",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

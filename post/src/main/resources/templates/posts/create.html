@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html
+    lang="en"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/layouts/main_layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 등록</title>
+    <style>
+        .error-message {color: red;}
+    </style>
+</head>
+<body>
+    <th:block layout:fragment="content">
+        <h1>게시글 등록</h1>
+        <form th:action="@{/posts/create}" method="post" th:object="${post}" enctype="multipart/form-data">
+            <table class="table table-hover table-bordered bg-white shadow-sm align-middle ">
+                <tr>
+                    <th class="text-center">제목</th>
+                    <td>
+                        <input type="text" th:field="*{title}">
+                        <span id="titleError" class="error-message"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-center">작성자</th>
+                    <td>
+                        <input type="text" th:field="*{writer}">
+                        <span id="writerError" class="error-message"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-center">내용</th>
+                    <td>
+                        <textarea th:field="*{content}" rows="5" cols="40"></textarea>
+                        <span id="contentError" class="error-message"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="right">
+                        <button type="button" onclick="create()">등록</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+
+    </th:block>
+    <th:block layout:fragment="pageScripts">
+        <script>
+            async function create() {
+                const data = {
+                    title: document.getElementById('title').value,
+                    writer: document.getElementById('writer').value,
+                    content: document.getElementById('content').value
+                }
+
+                try {
+                    const url = `/posts/create`;
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (!response.ok) {
+                        // 에러문 초기화
+                        ['title', 'writer', 'content'].forEach(field => {
+                            const el = document.getElementById(`${field}Error`)
+                            if (el) el.textContent = ''
+                        });
+
+                        const errorArray = await response.json();
+
+                        errorArray.forEach(e => {
+                            const field = e.field;
+                            const message = e.defaultMessage;
+                            const errorElement = document.getElementById(`${field}Error`)
+                            if (errorElement) errorElement.textContent = message
+                        });
+
+                        return
+                    }
+
+                    // 성공 처리
+                    const result = await response.text();
+                    alert("게시글 등록을 완료하였습니다.");
+                    location.href = `/posts/list`;
+
+                } catch (error) {
+                    console.error("요청 실패:", error);
+                }
+            }
+        </script>
+    </th:block>
+</body>
+</html>
