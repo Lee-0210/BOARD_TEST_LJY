@@ -14,9 +14,17 @@
     <div layout:fragment="content">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>게시글 목록</h1>
-            <a href="/posts/create" class="btn btn-primary">글쓰기</a>
         </div>
-
+        <div class="d-flex justify-content-between mb-3">
+            <a href="/posts/create" class="btn btn-primary">글쓰기</a>
+            <select class="form-select w-50" aria-label="Default select example" onchange="location.href='/posts/list?page=1&size=' + this.value">
+                <option value="5" th:selected="${pagination.size == 5}">5 개씩 보기</option>
+                <option value="10" th:selected="${pagination.size == 10}">10 개씩 보기</option>
+                <option value="30" th:selected="${pagination.size == 30}">30 개씩 보기</option>
+                <option value="50" th:selected="${pagination.size == 50}">50 개씩 보기</option>
+                <option value="100" th:selected="${pagination.size == 100}">100 개씩 보기</option>
+            </select>
+        </div>
         <table class="table table-hover table-bordered bg-white shadow-sm align-middle text-center">
             <thead class="table-light">
                 <tr>
@@ -44,6 +52,37 @@
                 </th:block>
             </tbody>
         </table>
+        <nav aria-label="Page navigation" class="d-flex justify-content-center" th:object="${pagination}">
+            <ul class="pagination">
+                <li class="page-item">
+                    <!-- <a class="page-link" th:href="@{/posts/list(page=*{first}, size=*{size}, count=*{count})}" aria-label="Fisrt"> -->
+                    <a class="page-link" th:href="@{${pageUri} + '&page=' + *{first}}" aria-label="Fisrt">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:if="${pagination.page != pagination.first}">
+                    <a class="page-link" th:href="@{${pageUri} + '&page=' + *{prev}}" aria-label="Prev">
+                        <span aria-hidden="true">&lsaquo;</span>
+                    </a>
+                </li>
+                <th:block th:each="page : *{ #numbers.sequence( start, end )}">
+                    <li class="page-item" th:classappend="${pagination.page == page} ? 'active' : ''">
+                        <!-- <a class="page-link" th:href="@{ /posts/list(page=${page}, size=*{size}, count=*{count})}" th:text="${page}">1</a> -->
+                        <a class="page-link" th:href="@{${pageUri} + '&page=' + ${page}}" th:text="${page}">1</a>
+                    </li>
+                </th:block>
+                <li class="page-item" th:if="${pagination.page != pagination.last}">
+                    <a class="page-link" th:href="@{${pageUri} + '&page=' + *{next}}" aria-label="Next">
+                        <span aria-hidden="true">&rsaquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" th:href="@{${pageUri} + '&page=' + *{last}}" aria-label="Last">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </body>
 </html>
