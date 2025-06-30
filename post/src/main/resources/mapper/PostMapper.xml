@@ -8,7 +8,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 게시글 리스트 -->
     <select id="list" resultType="Posts">
-        SELECT * FROM posts LIMIT #{index}, #{size}
+        SELECT * FROM posts
+        ORDER BY created_at DESC
+        LIMIT #{index}, #{size}
     </select>
 
     <!-- 게시글 수 -->
