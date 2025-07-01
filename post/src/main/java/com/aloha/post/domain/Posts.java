@@ -1,6 +1,5 @@
 package com.aloha.post.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
@@ -14,7 +13,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @Validated
-public class Posts implements Serializable {
+public class Posts {
 
     private Long no;
     private String id;

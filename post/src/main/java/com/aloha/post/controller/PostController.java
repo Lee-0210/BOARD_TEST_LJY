@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.aloha.post.domain.Pagination;
+import com.aloha.post.domain.Page;
 import com.aloha.post.domain.Posts;
 import com.aloha.post.service.PostService;
 
@@ -36,16 +36,16 @@ public class PostController {
     private PostService postService;
 
     @GetMapping("/list")
-    public String list(Model model, Pagination pagination) throws Exception {
-        List<Posts> list = postService.list(pagination);
-        model.addAttribute("pagination", pagination);
+    public String list(Model model, Page page) throws Exception {
+        List<Posts> list = postService.list(page);
+        model.addAttribute("pagination", page);
         model.addAttribute("list", list);
 
         // Uri 빌더
         String pageUri = UriComponentsBuilder.fromPath("/posts/list")
-                                            // .queryParam("page", pagination.getPage())
-                                            .queryParam("size", pagination.getSize())
-                                            .queryParam("count", pagination.getCount())
+                                            // .queryParam("page", Page.getPage())
+                                            .queryParam("size", page.getSize())
+                                            .queryParam("count", page.getCount())
                                             .build()
                                             .toUriString();
 
@@ -66,7 +66,7 @@ public class PostController {
 
     @GetMapping("/create")
     public String create(@ModelAttribute(value = "post") Posts post) {
-        return "posts/create";
+        return "posts/insert";
     }
 
     @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -110,9 +110,8 @@ public class PostController {
         // 데이터 요청
         boolean result = postService.update(post);
         // 리다이렉트
-        // ⭕ 데이터 처리 성공
         if(result) return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
-        // ❌ 데이터 처리 실패
+
         return  new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
     }
 
@@ -121,9 +120,8 @@ public class PostController {
         // 데이터 요청
         boolean result = postService.delete(no);
         // 리다이렉트
-        // ⭕ 데이터 처리 성공
         if(result) return "redirect:/posts/list";
-        // ❌ 데이터 처리 실패
+
         return "redirect:/posts/update/error=true";
     }
 
@@ -132,9 +130,8 @@ public class PostController {
         // 데이터 요청
         boolean result = postService.delete(no);
         // 리다이렉트
-        // ⭕ 데이터 처리 성공
         if(result) return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
-        // ❌ 데이터 처리 실패
+
         return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
     }
 

@@ -2,13 +2,13 @@ package com.aloha.post.service;
 
 import java.util.List;
 
-import com.aloha.post.domain.Pagination;
+import com.aloha.post.domain.Page;
 import com.aloha.post.domain.Posts;
 
 public interface PostService {
 
     // 목록
-    public List<Posts> list(Pagination pagination) throws Exception;
+    public List<Posts> list(Page page) throws Exception;
 
     // 조회
     public Posts select(Integer no) throws Exception;
